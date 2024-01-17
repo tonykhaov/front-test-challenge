@@ -35,12 +35,14 @@ export function TableConsentsData({ data, currentPage, lastPage }: TableConsents
 }
 
 export function UserConsentRow({ consent }: { consent: CollectedConsentWithConsentDetails }) {
+  const enabledConsents = consent.consents.filter((consent) => consent.enabled)
+
   return (
     <TableRow key={consent.id}>
       <TableCell>{consent.name}</TableCell>
       <TableCell>{consent.email}</TableCell>
-      {consent.consents.length > 0 ? (
-        <TableCell>{consent.consents.map((consent) => consent?.description).join(', ')}</TableCell>
+      {enabledConsents.length > 0 ? (
+        <TableCell>{enabledConsents.map((consent) => consent?.description).join(', ')}</TableCell>
       ) : (
         <TableCell>None</TableCell>
       )}

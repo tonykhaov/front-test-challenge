@@ -27,6 +27,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.3.1",
     "@pandacss/dev": "^0.27.2",
     "@remix-run/dev": "^2.5.0",
     "@remix-run/testing": "^2.5.0",

@@ -56,9 +56,9 @@ export const mockCollectedConsents: Array<CollectedConsent> = [
     name: 'Patricia Williams',
     email: 'patricia.williams@gmail.com',
     consents: [
-      { id: '1', enabled: true },
+      { id: '1', enabled: false },
       { id: '2', enabled: false },
-      { id: '3', enabled: true },
+      { id: '3', enabled: false },
     ],
   },
 ]
