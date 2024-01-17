@@ -42,18 +42,27 @@ export const database: {
   ],
 }
 
-export function addConsentDetails(consents: Array<CollectedConsent>) {
+export type CollectedConsentWithConsentDetails = Omit<CollectedConsent, 'consents'> & {
+  consents: Array<UserConsent & Partial<Consent>>
+}
+
+export function addConsentDetails(consents: Array<CollectedConsent>): CollectedConsentWithConsentDetails[] {
   return consents.map((consent) => {
     const consentsWithDetails = consent.consents.map((userConsent) => {
       const consentDetails = database.consentsList.find((consent) => consent.id === userConsent.id)
+
       return {
-        ...userConsent,
+        id: userConsent.id,
+        enabled: userConsent.enabled,
         name: consentDetails?.name,
         description: consentDetails?.description,
       }
     })
+
     return {
-      ...consent,
+      id: consent.id,
+      name: consent.name,
+      email: consent.email,
       consents: consentsWithDetails,
     }
   })

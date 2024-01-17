@@ -1,22 +1,10 @@
-import { Flex, Spacer } from 'styled-system/jsx'
+import { Spacer } from 'styled-system/jsx'
 import { addConsentDetails, database, getPaginatedConsents } from '../database.server'
-import { Link, useLoaderData, useSearchParams } from '@remix-run/react'
-import {
-  Container,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Table,
-  TableBody,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableRow,
-  Typography,
-} from '@mui/material'
-import { css } from '~/styled-system/css'
+import { useLoaderData, useSearchParams } from '@remix-run/react'
+import { Container, Typography } from '@mui/material'
 import { LoaderFunctionArgs, redirect } from '@remix-run/node'
+import { SelectPerPage } from '../components/select-per-page'
+import { TableConsentsData } from '../components/table-consents-data'
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url)
@@ -49,9 +37,11 @@ export default function ConsentsPage() {
   const currentPage = Number(searchParams.get('page') || '1')
   const perPage = searchParams.get('perPage') ?? 2
 
-  const changePageAndPreserveLink = (page: number) => {
-    searchParams.set('page', page.toString())
-    return '?' + searchParams.toString()
+  const updatePerPage = (perPage: number) => {
+    setSearchParams((s) => {
+      s.set('perPage', perPage.toString())
+      return s
+    })
   }
 
   return (
@@ -61,86 +51,9 @@ export default function ConsentsPage() {
 
       <Spacer h="4" />
 
-      <FormControl fullWidth>
-        <InputLabel>Show items per page</InputLabel>
-        <Select
-          label="Show items per page"
-          value={perPage}
-          onChange={(event) =>
-            setSearchParams((s) => {
-              s.set('perPage', event.target.value.toString())
-              return s
-            })
-          }
-        >
-          <MenuItem value={1}>1</MenuItem>
-          <MenuItem value={2}>2</MenuItem>
-          <MenuItem value={3}>3</MenuItem>
-          <MenuItem value={4}>4</MenuItem>
-          <MenuItem value={5}>5</MenuItem>
-          <MenuItem value={6}>6</MenuItem>
-          <MenuItem value={7}>7</MenuItem>
-          <MenuItem value={8}>8</MenuItem>
-          <MenuItem value={9}>9</MenuItem>
-          <MenuItem value={10}>10</MenuItem>
-        </Select>
-      </FormControl>
+      <SelectPerPage value={Number(perPage)} onChange={(event) => updatePerPage(Number(event.target.value))} />
 
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell>Consents given for</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data.consents.map((collectedConsent) => (
-            <TableRow key={collectedConsent.id}>
-              <TableCell>{collectedConsent.name}</TableCell>
-              <TableCell>{collectedConsent.email}</TableCell>
-              {collectedConsent.consents.length > 0 ? (
-                <TableCell>{collectedConsent.consents.map((consent) => consent.description).join(', ')}</TableCell>
-              ) : (
-                <TableCell>None</TableCell>
-              )}
-            </TableRow>
-          ))}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell>
-              {currentPage !== 1 ? <Link to={changePageAndPreserveLink(currentPage - 1)}>Previous page</Link> : null}
-            </TableCell>
-            <TableCell colSpan={2}>
-              <Flex gap="2" justifyContent="center">
-                {Array.from({ length: data.lastPage }).map((_, index) => {
-                  const page = index + 1
-                  return (
-                    <Link
-                      relative="path"
-                      key={index}
-                      to={changePageAndPreserveLink(page)}
-                      className={css({
-                        fontWeight: currentPage === page ? 'bold' : 'normal',
-                        color: currentPage === page ? 'black' : 'inherit',
-                        textDecoration: currentPage === page ? 'underline' : 'none',
-                      })}
-                    >
-                      {page}
-                    </Link>
-                  )
-                })}
-              </Flex>
-            </TableCell>
-            <TableCell>
-              {currentPage !== data.lastPage ? (
-                <Link to={changePageAndPreserveLink(currentPage + 1)}>Next page</Link>
-              ) : null}
-            </TableCell>
-          </TableRow>
-        </TableFooter>
-      </Table>
+      <TableConsentsData data={data.consents} currentPage={currentPage} lastPage={data.lastPage} />
     </Container>
   )
 }
