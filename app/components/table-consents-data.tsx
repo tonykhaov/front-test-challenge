@@ -60,16 +60,23 @@ export function Pagination({ currentPage, lastPage }: { currentPage: number; las
 
   return (
     <TableRow>
-      <TableCell>{currentPage !== 1 ? <Link to={toNewParams(currentPage - 1)}>Previous page</Link> : null}</TableCell>
+      <TableCell>
+        {currentPage !== 1 ? (
+          <Link to={toNewParams(currentPage - 1)} aria-label="Go to previous page">
+            Previous page
+          </Link>
+        ) : null}
+      </TableCell>
       <TableCell colSpan={2}>
         <Flex gap="2" justifyContent="center">
           {Array.from({ length: lastPage }).map((_, index) => {
             const page = index + 1
             return (
               <Link
-                relative="path"
                 key={index}
                 to={toNewParams(page)}
+                aria-label={`Go to page ${page}`}
+                aria-current={currentPage === page ? 'page' : undefined}
                 className={css({
                   fontWeight: currentPage === page ? 'bold' : 'normal',
                   color: currentPage === page ? 'black' : 'inherit',
@@ -83,7 +90,11 @@ export function Pagination({ currentPage, lastPage }: { currentPage: number; las
         </Flex>
       </TableCell>
       <TableCell>
-        {currentPage !== lastPage ? <Link to={toNewParams(currentPage + 1)}>Next page</Link> : null}
+        {currentPage !== lastPage ? (
+          <Link to={toNewParams(currentPage + 1)} aria-label="Go to next page">
+            Next page
+          </Link>
+        ) : null}
       </TableCell>
     </TableRow>
   )

@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { TableConsentsData, UserConsentRow } from '../table-consents-data'
+import { Pagination, TableConsentsData, UserConsentRow } from '../table-consents-data'
 import { faker } from '@faker-js/faker'
 import { createRemixStub } from '@remix-run/testing'
 
@@ -60,6 +60,7 @@ describe('TableConsentsData', () => {
     expect(screen.getByText(mockConsents[1].email)).toBeInTheDocument()
   })
 })
+
 describe('UserConsentRow', () => {
   it("should render user's name, email and one enabled consent", () => {
     const mockConsent = {
@@ -164,5 +165,138 @@ describe('UserConsentRow', () => {
     expect(screen.getByText(mockConsent.email)).toBeInTheDocument()
     expect(screen.getByText(/none/i)).toBeInTheDocument()
     expect(screen.queryByText(mockConsent.consents[0].description)).not.toBeInTheDocument()
+  })
+})
+
+describe('Pagination', () => {
+  it('should not show previous page link if current page is 1', () => {
+    const RemixStub = createRemixStub([
+      {
+        Component: () => (
+          <table>
+            <tfoot>
+              <Pagination currentPage={1} lastPage={2} />
+            </tfoot>
+          </table>
+        ),
+        path: '/',
+      },
+    ])
+
+    render(<RemixStub />)
+    expect(screen.queryByText(/previous page/i)).not.toBeInTheDocument()
+  })
+
+  it('should show previous page link if current page is greater than 1', () => {
+    const RemixStub = createRemixStub([
+      {
+        Component: () => (
+          <table>
+            <tfoot>
+              <Pagination currentPage={2} lastPage={2} />
+            </tfoot>
+          </table>
+        ),
+        path: '/',
+      },
+    ])
+
+    render(<RemixStub />)
+    expect(screen.getByText(/previous page/i)).toBeInTheDocument()
+  })
+
+  it('should not show next page link if current page is last page', () => {
+    const RemixStub = createRemixStub([
+      {
+        Component: () => (
+          <table>
+            <tfoot>
+              <Pagination currentPage={2} lastPage={2} />
+            </tfoot>
+          </table>
+        ),
+        path: '/',
+      },
+    ])
+
+    render(<RemixStub />)
+    expect(screen.queryByText(/next page/i)).not.toBeInTheDocument()
+  })
+
+  it('should show next page link if current page is less than last page', () => {
+    const RemixStub = createRemixStub([
+      {
+        Component: () => (
+          <table>
+            <tfoot>
+              <Pagination currentPage={1} lastPage={2} />
+            </tfoot>
+          </table>
+        ),
+        path: '/',
+      },
+    ])
+
+    render(<RemixStub />)
+    expect(screen.getByText(/next page/i)).toBeInTheDocument()
+  })
+
+  it('current page should be active', () => {
+    const currentPage = 4
+    const RemixStub = createRemixStub([
+      {
+        Component: () => (
+          <table>
+            <tfoot>
+              <Pagination currentPage={currentPage} lastPage={currentPage + 5} />
+            </tfoot>
+          </table>
+        ),
+        path: '/',
+      },
+    ])
+
+    render(<RemixStub />)
+    expect(screen.getByText(currentPage)).toHaveAttribute('aria-current', 'page')
+  })
+
+  it('should see both previous page and next page when current page is in the middle', () => {
+    const currentPage = 4
+    const RemixStub = createRemixStub([
+      {
+        Component: () => (
+          <table>
+            <tfoot>
+              <Pagination currentPage={currentPage} lastPage={currentPage + 5} />
+            </tfoot>
+          </table>
+        ),
+        path: '/',
+      },
+    ])
+
+    render(<RemixStub />)
+    expect(screen.getByText(/previous page/i)).toBeInTheDocument()
+    expect(screen.getByText(/next page/i)).toBeInTheDocument()
+  })
+
+  it('should have accessiblity attributes', () => {
+    const RemixStub = createRemixStub([
+      {
+        Component: () => (
+          <table>
+            <tfoot>
+              <Pagination currentPage={2} lastPage={3} />
+            </tfoot>
+          </table>
+        ),
+        path: '/',
+      },
+    ])
+
+    render(<RemixStub />)
+    expect(screen.getByLabelText(/Go to previous page/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/go to next page/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/go to page 2/i)).toBeInTheDocument()
   })
 })
