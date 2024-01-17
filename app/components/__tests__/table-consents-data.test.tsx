@@ -1,7 +1,65 @@
 import { render, screen } from '@testing-library/react'
-import { UserConsentRow } from '../table-consents-data'
+import { TableConsentsData, UserConsentRow } from '../table-consents-data'
 import { faker } from '@faker-js/faker'
+import { createRemixStub } from '@remix-run/testing'
 
+describe('TableConsentsData', () => {
+  it('should render consents data in the table', () => {
+    const mockConsents = [
+      {
+        id: faker.string.uuid(),
+        name: faker.person.fullName(),
+        email: faker.internet.email(),
+        consents: [
+          {
+            id: faker.string.uuid(),
+            name: faker.lorem.word(),
+            description: faker.lorem.sentence(),
+            enabled: true,
+          },
+          {
+            id: faker.string.uuid(),
+            name: faker.lorem.word(),
+            description: faker.lorem.sentence(),
+            enabled: false,
+          },
+        ],
+      },
+      {
+        id: faker.string.uuid(),
+        name: faker.person.fullName(),
+        email: faker.internet.email(),
+        consents: [
+          {
+            id: faker.string.uuid(),
+            name: faker.lorem.word(),
+            description: faker.lorem.sentence(),
+            enabled: true,
+          },
+          {
+            id: faker.string.uuid(),
+            name: faker.lorem.word(),
+            description: faker.lorem.sentence(),
+            enabled: false,
+          },
+        ],
+      },
+    ]
+    const RemixStub = createRemixStub([
+      {
+        Component: () => <TableConsentsData data={mockConsents} currentPage={1} lastPage={1} />,
+        path: '/',
+      },
+    ])
+
+    render(<RemixStub />)
+    expect(screen.getByText(mockConsents[0].name)).toBeInTheDocument()
+    expect(screen.getByText(mockConsents[0].email)).toBeInTheDocument()
+
+    expect(screen.getByText(mockConsents[1].name)).toBeInTheDocument()
+    expect(screen.getByText(mockConsents[1].email)).toBeInTheDocument()
+  })
+})
 describe('UserConsentRow', () => {
   it("should render user's name, email and one enabled consent", () => {
     const mockConsent = {
