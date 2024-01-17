@@ -25,3 +25,5 @@ Run the app locally
 ```
 pnpm run dev
 ```
+
+There is mock data so if you want to clear them or modify them go to `./app/mock/data.ts`
