@@ -1,5 +1,6 @@
 export type GivenConsent = {
   id: string
+  name: string
   email: string
   consents: Array<AgreedConsent>
 }
