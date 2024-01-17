@@ -6,19 +6,19 @@ import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
 export const loader = async () => {
   const consentsList = database.consentsList
 
-  const consents = database.givenConsents.map((givenConsent) => {
-    const enabledConsents = givenConsent.consents.filter((consent) => consent.enabled)
-    const consentsWithDescription = enabledConsents.map((consent) => ({
+  const consents = database.collectedConsents.map((collectedConsent) => {
+    const enabledConsents = collectedConsent.consents.filter((consent) => consent.enabled)
+    const userConsentsWithDetails = enabledConsents.map((consent) => ({
       id: consent.id,
       enabled: consent.enabled,
       ...consentsList.find((c) => c.id === consent.id),
     }))
 
     return {
-      id: givenConsent.id,
-      name: givenConsent.name,
-      email: givenConsent.email,
-      consents: consentsWithDescription,
+      id: collectedConsent.id,
+      name: collectedConsent.name,
+      email: collectedConsent.email,
+      consents: userConsentsWithDetails,
     }
   })
 
@@ -41,12 +41,12 @@ export default function ConsentsPage() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.consents.map((givenConsent) => (
-            <TableRow key={givenConsent.id}>
-              <TableCell>{givenConsent.name}</TableCell>
-              <TableCell>{givenConsent.email}</TableCell>
-              {givenConsent.consents.length > 0 ? (
-                <TableCell>{givenConsent.consents.map((consent) => consent.description).join(', ')}</TableCell>
+          {data.consents.map((collectedConsent) => (
+            <TableRow key={collectedConsent.id}>
+              <TableCell>{collectedConsent.name}</TableCell>
+              <TableCell>{collectedConsent.email}</TableCell>
+              {collectedConsent.consents.length > 0 ? (
+                <TableCell>{collectedConsent.consents.map((consent) => consent.description).join(', ')}</TableCell>
               ) : (
                 <TableCell>None</TableCell>
               )}

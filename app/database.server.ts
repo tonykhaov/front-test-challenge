@@ -1,11 +1,11 @@
-export type GivenConsent = {
+export type CollectedConsent = {
   id: string
   name: string
   email: string
-  consents: Array<AgreedConsent>
+  consents: Array<UserConsent>
 }
 
-export type AgreedConsent = {
+export type UserConsent = {
   id: Consent['id']
   enabled: boolean
 }
@@ -17,10 +17,10 @@ export type Consent = {
 }
 
 export const database: {
-  givenConsents: Array<GivenConsent>
+  collectedConsents: Array<CollectedConsent>
   consentsList: Array<Consent>
 } = {
-  givenConsents: [],
+  collectedConsents: [],
   consentsList: [
     {
       id: '1',

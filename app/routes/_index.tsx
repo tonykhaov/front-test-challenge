@@ -3,7 +3,7 @@ import { Alert, Button, Checkbox, FormLabel, Input } from '@mui/material'
 import { ActionFunctionArgs, json } from '@remix-run/node'
 import { Form, useActionData, useLoaderData } from '@remix-run/react'
 import { Flex, Spacer, styled } from 'styled-system/jsx'
-import { database, type GivenConsent } from '../database.server'
+import { database, type CollectedConsent } from '../database.server'
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const body = await request.formData()
@@ -11,18 +11,18 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const name = body.get('name')
   const email = body.get('email')
 
-  const agreedConsents: GivenConsent['consents'] = database.consentsList.map((consent) => ({
+  const userConsents: CollectedConsent['consents'] = database.consentsList.map((consent) => ({
     id: consent.id,
     enabled: body.get(`consent-${consent.id}`) === 'on',
   }))
 
-  const newGivenConsent: GivenConsent = {
+  const collectedConsent: CollectedConsent = {
     name,
     email,
-    consents: agreedConsents,
+    consents: userConsents,
   }
 
-  database.givenConsents.push(newGivenConsent)
+  database.collectedConsents.push(collectedConsent)
 
   return json({ ok: true })
 }
