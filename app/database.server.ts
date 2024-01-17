@@ -1,3 +1,5 @@
+import { mockCollectedConsents } from './mock/data'
+
 export type CollectedConsent = {
   id: string
   name: string
@@ -20,7 +22,7 @@ export const database: {
   collectedConsents: Array<CollectedConsent>
   consentsList: Array<Consent>
 } = {
-  collectedConsents: [],
+  collectedConsents: mockCollectedConsents,
   consentsList: [
     {
       id: '1',
