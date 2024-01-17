@@ -1,27 +1,12 @@
 import { mockCollectedConsents } from './mock/data'
+import { CollectedConsent, Consent, CollectedConsentWithConsentDetails } from './types'
 
-export type CollectedConsent = {
-  id: string
-  name: string
-  email: string
-  consents: Array<UserConsent>
-}
-
-export type UserConsent = {
-  id: Consent['id']
-  enabled: boolean
-}
-
-export type Consent = {
-  id: string
-  name: string
-  description: string
-}
-
-export const database: {
+type Database = {
   collectedConsents: Array<CollectedConsent>
   consentsList: Array<Consent>
-} = {
+}
+
+export const database: Database = {
   collectedConsents: mockCollectedConsents,
   consentsList: [
     {
@@ -40,10 +25,6 @@ export const database: {
       description: 'Contribute to anonymous visit statistics',
     },
   ],
-}
-
-export type CollectedConsentWithConsentDetails = Omit<CollectedConsent, 'consents'> & {
-  consents: Array<UserConsent & Partial<Consent>>
 }
 
 export function addConsentDetails(consents: Array<CollectedConsent>): CollectedConsentWithConsentDetails[] {

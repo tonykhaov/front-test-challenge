@@ -1,4 +1,4 @@
-import { CollectedConsent } from '../database.server'
+import { CollectedConsent } from '../types'
 
 export const mockCollectedConsents: Array<CollectedConsent> = [
   {

@@ -3,7 +3,8 @@ import { Alert, Button, Checkbox, FormLabel, Input, Link, Typography } from '@mu
 import { ActionFunctionArgs, json } from '@remix-run/node'
 import { Form, useActionData, useLoaderData } from '@remix-run/react'
 import { Flex, Spacer, styled } from 'styled-system/jsx'
-import { database, type CollectedConsent } from '../database.server'
+import { database } from '../database.server'
+import { CollectedConsent } from '../types'
 
 export default function Index() {
   const data = useLoaderData<typeof loader>()

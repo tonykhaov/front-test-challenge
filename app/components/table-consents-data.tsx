@@ -2,7 +2,7 @@ import { Table, TableHead, TableRow, TableCell, TableBody, TableFooter } from '@
 import { Link, useSearchParams } from '@remix-run/react'
 import { css } from '~/styled-system/css'
 import { Flex } from '~/styled-system/jsx'
-import { CollectedConsentWithConsentDetails } from '../database.server'
+import { CollectedConsentWithConsentDetails } from '../types'
 
 type TableConsentsDataProps = {
   data: CollectedConsentWithConsentDetails[]
