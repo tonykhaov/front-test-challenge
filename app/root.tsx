@@ -84,17 +84,17 @@ function NavLink() {
           gap: '2',
         })}
       >
-        <MenuItem selected={pathname === '/'}>
-          <Link to="/">
+        <Link to="/">
+          <MenuItem selected={pathname === '/'}>
             <Typography variant="h5">Give consent</Typography>
-          </Link>
-        </MenuItem>
+          </MenuItem>
+        </Link>
 
-        <MenuItem selected={pathname === '/consents'}>
-          <Link to="/consents">
+        <Link to="/consents">
+          <MenuItem selected={pathname === '/consents'}>
             <Typography variant="h5">Collected consents</Typography>
-          </Link>
-        </MenuItem>
+          </MenuItem>
+        </Link>
       </MenuList>
     </styled.nav>
   )
