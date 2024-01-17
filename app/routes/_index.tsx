@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Alert, Button, Checkbox, FormLabel, Input } from '@mui/material'
+import { Alert, Button, Checkbox, FormLabel, Input, Link, Typography } from '@mui/material'
 import { ActionFunctionArgs, json } from '@remix-run/node'
 import { Form, useActionData, useLoaderData } from '@remix-run/react'
 import { Flex, Spacer, styled } from 'styled-system/jsx'
@@ -19,7 +19,7 @@ export default function Index() {
 
   return (
     <styled.div w="xl" mx="auto">
-      <Spacer h="12" />
+      <Spacer h="8" />
 
       {actionData?.ok && (
         <>
@@ -39,6 +39,16 @@ export default function Index() {
         </>
       )}
 
+      <Typography variant="h5">Give consent</Typography>
+      <Spacer h="2" />
+
+      <Typography>
+        We are collecting your personal information to provide you with the service you requested. Your personal
+        information will be used and stored in accordance with our <Link>Privacy Policy</Link>.
+      </Typography>
+
+      <Spacer h="2" />
+
       <Form method="post">
         <div>
           <Input placeholder="Name" name="name" required />
@@ -51,7 +61,7 @@ export default function Index() {
         </div>
 
         <Spacer h="6" />
-        <h1>I agree to:</h1>
+        <Typography variant="subtitle1">I agree to:</Typography>
         <Spacer h="4" />
 
         <styled.div borderWidth="2">

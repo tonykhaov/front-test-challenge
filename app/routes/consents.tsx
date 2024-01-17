@@ -1,7 +1,7 @@
-import { Flex, Spacer, styled } from 'styled-system/jsx'
+import { Flex, Spacer } from 'styled-system/jsx'
 import { database } from '../database.server'
 import { Link, useLoaderData, useSearchParams } from '@remix-run/react'
-import { Table, TableBody, TableCell, TableFooter, TableHead, TableRow } from '@mui/material'
+import { Container, Table, TableBody, TableCell, TableFooter, TableHead, TableRow, Typography } from '@mui/material'
 import { css } from '~/styled-system/css'
 import { LoaderFunctionArgs } from '@remix-run/node'
 
@@ -44,16 +44,13 @@ export default function ConsentsPage() {
   const currentPage = Number(searchParams.get('page') || '1')
 
   return (
-    <styled.div>
-      <Spacer h="12" />
-      <h1>Collected Consents</h1>
+    <Container>
+      <Spacer h="8" />
+      <Typography variant="h5">Collected Consents</Typography>
 
-      <Table
-        className={css({
-          maxWidth: '5xl',
-          mx: 'auto',
-        })}
-      >
+      <Spacer h="4" />
+
+      <Table>
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
@@ -105,6 +102,6 @@ export default function ConsentsPage() {
           </TableRow>
         </TableFooter>
       </Table>
-    </styled.div>
+    </Container>
   )
 }
