@@ -1,36 +1,27 @@
-# Welcome to Remix + Vite!
+## Technical stack
 
-📖 See the [Remix docs](https://remix.run/docs) and the [Remix Vite docs](https://remix.run/docs/en/main/future/vite) for details on supported features.
+- [pnpm](https://pnpm.io/): Package Manager
+- [React](https://react.dev/): Javascript Framework
+- [Remix](https://remix.run/): React Framework
+- [Typescript](https://www.typescriptlang.org/) Typed Javascript Language
+- [PandaCSS](https://panda-css.com/): Type-safe CSS
+- [Material UI](https://mui.com/material-ui/): UI Library
+- [Vite](https://vitejs.dev/): Bundler
+- [Vitest](https://vitest.dev/): Test runner
+- [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/): Wrapper to test react
+  components
+- [Playwright](https://playwright.dev/): E2E testing tool
 
-## Development
+## To run the app
 
-Run the Vite dev server:
+Install the dependencies with pnpm
 
-```shellscript
-npm run dev
+```
+pnpm install
 ```
 
-## Deployment
+Run the app locally
 
-First, build your app for production:
-
-```sh
-npm run build
 ```
-
-Then run the app in production mode:
-
-```sh
-npm start
+pnpm run dev
 ```
-
-Now you'll need to pick a host to deploy it to.
-
-### DIY
-
-If you're familiar with deploying Node applications, the built-in Remix app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-- `build/server`
-- `build/client`
