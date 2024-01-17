@@ -1,3 +1,4 @@
+import { Button } from '@mui/material'
 import type { MetaFunction } from '@remix-run/node'
 
 import { css } from 'styled-system/css'
@@ -16,6 +17,9 @@ export default function Index() {
       >
         Welcome to Remix
       </h1>
+      <Button variant="contained" color="primary">
+        Hello
+      </Button>
       <ul>
         <li>
           <a target="_blank" href="https://remix.run/tutorials/blog" rel="noreferrer">
