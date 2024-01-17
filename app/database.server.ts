@@ -41,3 +41,26 @@ export const database: {
     },
   ],
 }
+
+export function addConsentDetails(consents: Array<CollectedConsent>) {
+  return consents.map((consent) => {
+    const consentsWithDetails = consent.consents.map((userConsent) => {
+      const consentDetails = database.consentsList.find((consent) => consent.id === userConsent.id)
+      return {
+        ...userConsent,
+        name: consentDetails?.name,
+        description: consentDetails?.description,
+      }
+    })
+    return {
+      ...consent,
+      consents: consentsWithDetails,
+    }
+  })
+}
+
+export const getPaginatedConsents = (page: number, pageSize: number) => {
+  const start = (page - 1) * pageSize
+  const end = start + pageSize
+  return database.collectedConsents.slice(start, end)
+}

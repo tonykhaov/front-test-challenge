@@ -1,39 +1,27 @@
 import { Flex, Spacer } from 'styled-system/jsx'
-import { database } from '../database.server'
+import { addConsentDetails, database, getPaginatedConsents } from '../database.server'
 import { Link, useLoaderData, useSearchParams } from '@remix-run/react'
 import { Container, Table, TableBody, TableCell, TableFooter, TableHead, TableRow, Typography } from '@mui/material'
 import { css } from '~/styled-system/css'
-import { LoaderFunctionArgs } from '@remix-run/node'
+import { LoaderFunctionArgs, redirect } from '@remix-run/node'
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url)
-  const page = Number(url.searchParams.get('page') || '1')
-  const perPage = Number(url.searchParams.get('perPage') || '2')
 
-  const consentsList = database.consentsList
+  const page = Number(url.searchParams.get('page') || 1)
+  const perPage = Number(url.searchParams.get('perPage') || 2)
 
   const total = database.collectedConsents.length
+
   const lastPage = Math.ceil(total / perPage)
 
-  const start = (page - 1) * perPage
-  const end = start + perPage
-  const paginated = database.collectedConsents.slice(start, end)
+  if (page > lastPage) {
+    url.searchParams.set('page', String(lastPage))
+    return redirect(url.toString())
+  }
 
-  const consents = paginated.map((collectedConsent) => {
-    const enabledConsents = collectedConsent.consents.filter((consent) => consent.enabled)
-    const userConsentsWithDetails = enabledConsents.map((consent) => ({
-      id: consent.id,
-      enabled: consent.enabled,
-      ...consentsList.find((c) => c.id === consent.id),
-    }))
-
-    return {
-      id: collectedConsent.id,
-      name: collectedConsent.name,
-      email: collectedConsent.email,
-      consents: userConsentsWithDetails,
-    }
-  })
+  const paginated = getPaginatedConsents(page, perPage)
+  const consents = addConsentDetails(paginated)
 
   return { consents, total, lastPage }
 }
