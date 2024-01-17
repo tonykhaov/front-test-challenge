@@ -1,23 +1,38 @@
 import * as React from 'react'
 import { Alert, Button, Checkbox, FormLabel, Input } from '@mui/material'
 import { ActionFunctionArgs, json } from '@remix-run/node'
-import { Form, useActionData } from '@remix-run/react'
+import { Form, useActionData, useLoaderData } from '@remix-run/react'
 import { Flex, Spacer, styled } from 'styled-system/jsx'
+import { database, type GivenConsent } from '../database.server'
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const body = await request.formData()
 
   const name = body.get('name')
   const email = body.get('email')
-  const receiveNewsletter = body.get('receive-newsletter') === 'on'
-  const beShownTargetedAds = body.get('be-shown-targeted-ads') === 'on'
-  const contributeToAnonymousVisitStatistics = body.get('contribute-to-anonymous-visit-statistics') === 'on'
 
-  console.log({ name, email, receiveNewsletter, beShownTargetedAds, contributeToAnonymousVisitStatistics })
+  const agreedConsents: GivenConsent['consents'] = database.consentsList.map((consent) => ({
+    id: consent.id,
+    enabled: body.get(`consent-${consent.id}`) === 'on',
+  }))
+
+  const newGivenConsent: GivenConsent = {
+    name,
+    email,
+    consents: agreedConsents,
+  }
+
+  database.givenConsents.push(newGivenConsent)
+
   return json({ ok: true })
 }
 
+export const loader = async () => {
+  return { consentsList: database.consentsList }
+}
 export default function Index() {
+  const data = useLoaderData<typeof loader>()
+
   const actionData = useActionData<typeof action>()
   const formRef = React.useRef<HTMLFormElement>(null)
 
@@ -56,26 +71,14 @@ export default function Index() {
         <Spacer h="4" />
 
         <styled.div borderWidth="2">
-          <div>
-            <FormLabel>
-              <Checkbox name="receive-newsletter" />
-              Receive newsletter
-            </FormLabel>
-          </div>
-
-          <div>
-            <FormLabel>
-              <Checkbox name="be-shown-targeted-ads" />
-              Be shown targeted ads
-            </FormLabel>
-          </div>
-
-          <div>
-            <FormLabel>
-              <Checkbox name="contribute-to-anonymous-visit-statistics" />
-              Contribute to anonymous visit statistics
-            </FormLabel>
-          </div>
+          {data.consentsList.map((consent) => (
+            <div key={consent.id}>
+              <FormLabel>
+                <Checkbox name={`consent-${consent.id}`} />
+                {consent.name}
+              </FormLabel>
+            </div>
+          ))}
         </styled.div>
 
         <Spacer h="8" />
