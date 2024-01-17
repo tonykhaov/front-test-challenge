@@ -1,4 +1,5 @@
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react'
+import { Link, Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react'
+import { Flex, styled } from 'styled-system/jsx'
 
 import './styles/index.css'
 
@@ -12,7 +13,19 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Outlet />
+        <Flex>
+          <styled.nav minWidth="48">
+            <Link to="/">
+              <styled.h1 fontSize="xl">Give consent</styled.h1>
+            </Link>
+            <Link to="/consents">
+              <styled.h1 fontSize="xl">Collected consents</styled.h1>
+            </Link>
+          </styled.nav>
+          <styled.div flex="1">
+            <Outlet />
+          </styled.div>
+        </Flex>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
