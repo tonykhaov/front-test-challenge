@@ -17,6 +17,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }))
 
   const collectedConsent: CollectedConsent = {
+    id: Date.now().toString(),
     name,
     email,
     consents: userConsents,
