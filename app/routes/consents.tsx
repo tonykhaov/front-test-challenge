@@ -11,7 +11,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const perPage = Number(url.searchParams.get('perPage') || '2')
 
   const consentsList = database.consentsList
-  const total = consentsList.length
+
+  const total = database.collectedConsents.length
   const lastPage = Math.ceil(total / perPage)
 
   const start = (page - 1) * perPage
