@@ -1,7 +1,20 @@
 import { Flex, Spacer } from 'styled-system/jsx'
 import { addConsentDetails, database, getPaginatedConsents } from '../database.server'
 import { Link, useLoaderData, useSearchParams } from '@remix-run/react'
-import { Container, Table, TableBody, TableCell, TableFooter, TableHead, TableRow, Typography } from '@mui/material'
+import {
+  Container,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@mui/material'
 import { css } from '~/styled-system/css'
 import { LoaderFunctionArgs, redirect } from '@remix-run/node'
 
@@ -32,8 +45,14 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export default function ConsentsPage() {
   const data = useLoaderData<typeof loader>()
 
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const currentPage = Number(searchParams.get('page') || '1')
+  const perPage = searchParams.get('perPage') ?? 2
+
+  const changePageAndPreserveLink = (page: number) => {
+    searchParams.set('page', page.toString())
+    return '?' + searchParams.toString()
+  }
 
   return (
     <Container>
@@ -41,6 +60,31 @@ export default function ConsentsPage() {
       <Typography variant="h5">Collected Consents</Typography>
 
       <Spacer h="4" />
+
+      <FormControl fullWidth>
+        <InputLabel>Show items per page</InputLabel>
+        <Select
+          label="Show items per page"
+          value={perPage}
+          onChange={(event) =>
+            setSearchParams((s) => {
+              s.set('perPage', event.target.value.toString())
+              return s
+            })
+          }
+        >
+          <MenuItem value={1}>1</MenuItem>
+          <MenuItem value={2}>2</MenuItem>
+          <MenuItem value={3}>3</MenuItem>
+          <MenuItem value={4}>4</MenuItem>
+          <MenuItem value={5}>5</MenuItem>
+          <MenuItem value={6}>6</MenuItem>
+          <MenuItem value={7}>7</MenuItem>
+          <MenuItem value={8}>8</MenuItem>
+          <MenuItem value={9}>9</MenuItem>
+          <MenuItem value={10}>10</MenuItem>
+        </Select>
+      </FormControl>
 
       <Table>
         <TableHead>
@@ -66,7 +110,7 @@ export default function ConsentsPage() {
         <TableFooter>
           <TableRow>
             <TableCell>
-              {currentPage !== 1 ? <Link to={`?page=${currentPage - 1}`}>Previous page</Link> : null}
+              {currentPage !== 1 ? <Link to={changePageAndPreserveLink(currentPage - 1)}>Previous page</Link> : null}
             </TableCell>
             <TableCell colSpan={2}>
               <Flex gap="2" justifyContent="center">
@@ -74,8 +118,9 @@ export default function ConsentsPage() {
                   const page = index + 1
                   return (
                     <Link
+                      relative="path"
                       key={index}
-                      to={`?page=${page}`}
+                      to={changePageAndPreserveLink(page)}
                       className={css({
                         fontWeight: currentPage === page ? 'bold' : 'normal',
                         color: currentPage === page ? 'black' : 'inherit',
@@ -89,7 +134,9 @@ export default function ConsentsPage() {
               </Flex>
             </TableCell>
             <TableCell>
-              {currentPage !== data.lastPage ? <Link to={`?page=${currentPage + 1}`}>Next page</Link> : null}
+              {currentPage !== data.lastPage ? (
+                <Link to={changePageAndPreserveLink(currentPage + 1)}>Next page</Link>
+              ) : null}
             </TableCell>
           </TableRow>
         </TableFooter>
