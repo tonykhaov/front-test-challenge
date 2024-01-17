@@ -5,41 +5,15 @@ import { Form, useActionData, useLoaderData } from '@remix-run/react'
 import { Flex, Spacer, styled } from 'styled-system/jsx'
 import { database, type CollectedConsent } from '../database.server'
 
-export const action = async ({ request }: ActionFunctionArgs) => {
-  const body = await request.formData()
-
-  const name = body.get('name')
-  const email = body.get('email')
-
-  const userConsents: CollectedConsent['consents'] = database.consentsList.map((consent) => ({
-    id: consent.id,
-    enabled: body.get(`consent-${consent.id}`) === 'on',
-  }))
-
-  const collectedConsent: CollectedConsent = {
-    id: Date.now().toString(),
-    name,
-    email,
-    consents: userConsents,
-  }
-
-  database.collectedConsents.push(collectedConsent)
-
-  return json({ ok: true })
-}
-
-export const loader = async () => {
-  return { consentsList: database.consentsList }
-}
 export default function Index() {
   const data = useLoaderData<typeof loader>()
 
   const actionData = useActionData<typeof action>()
-  const formRef = React.useRef<HTMLFormElement>(null)
+  const emailRef = React.useRef<HTMLInputElement>(null)
 
   React.useEffect(() => {
-    if (actionData?.ok) {
-      formRef.current?.reset()
+    if (actionData && 'error' in actionData) {
+      emailRef.current?.focus()
     }
   }, [actionData])
 
@@ -56,7 +30,16 @@ export default function Index() {
         </>
       )}
 
-      <Form ref={formRef} method="post">
+      {actionData && 'error' in actionData && (
+        <>
+          <Alert severity="error">
+            <strong>Oops!</strong> {typeof actionData.error === 'string' ? actionData.error : 'Something went wrong.'}
+          </Alert>
+          <Spacer h="4" />
+        </>
+      )}
+
+      <Form method="post">
         <div>
           <Input placeholder="Name" name="name" required />
         </div>
@@ -64,7 +47,7 @@ export default function Index() {
         <Spacer h="4" />
 
         <div>
-          <Input type="email" placeholder="Email address" name="email" required />
+          <Input inputRef={emailRef} type="email" placeholder="Email address" name="email" required />
         </div>
 
         <Spacer h="6" />
@@ -92,4 +75,43 @@ export default function Index() {
       </Form>
     </styled.div>
   )
+}
+
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const body = await request.formData()
+
+  const name = body.get('name')
+  if (typeof name !== 'string') {
+    return json({ ok: false, error: 'Name is required' })
+  }
+
+  const email = body.get('email')
+  if (typeof email !== 'string') {
+    return json({ ok: false, error: 'Email is required' })
+  }
+
+  const emailAlreadyExists = database.collectedConsents.find((consent) => consent.email === email)
+  if (emailAlreadyExists) {
+    return json({ ok: false, error: 'Email already exists' })
+  }
+
+  const userConsents: CollectedConsent['consents'] = database.consentsList.map((consent) => ({
+    id: consent.id,
+    enabled: body.get(`consent-${consent.id}`) === 'on',
+  }))
+
+  const collectedConsent: CollectedConsent = {
+    id: Date.now().toString(),
+    name,
+    email,
+    consents: userConsents,
+  }
+
+  database.collectedConsents.push(collectedConsent)
+
+  return json({ ok: true })
+}
+
+export const loader = async () => {
+  return { consentsList: database.consentsList }
 }
