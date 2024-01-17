@@ -15,6 +15,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const lastPage = Math.ceil(total / perPage)
 
+  if (page < 1) {
+    url.searchParams.set('page', '1')
+    return redirect(url.toString())
+  }
   if (page > lastPage) {
     url.searchParams.set('page', String(lastPage))
     return redirect(url.toString())
