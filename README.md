@@ -1,6 +1,8 @@
 ## Give consents App
 
-![Collectd consents page](./assets/images/consents.jpg) ![Homepage](./assets/images/homepage.jpg)
+![Homepage](./assets/images/homepage.png)
+
+![Collectd consents page](./assets/images/consents.png)
 
 ## Technical stack
 
