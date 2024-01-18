@@ -42,12 +42,42 @@ test('collect a new consent flow: give consent and see it in the collected conse
   await expect(page).toHaveURL('/consents')
 
   const lastPageButton = page.getByTestId('last-page')
-  lastPageButton.click()
+  await lastPageButton.click()
 
   const nameCell = page.getByText(user.name)
   await expect(nameCell).toBeVisible()
   const emailCell = page.getByText(user.email)
   await expect(emailCell).toBeVisible()
+})
+
+test('collect a new consent flow: should not save when email is already taken', async ({ page }) => {
+  await page.goto('/')
+
+  const user = {
+    name: faker.person.fullName(),
+    email: mockCollectedConsents[0].email,
+  } as const
+
+  const nameInput = page.getByLabel(/name/i)
+  await nameInput.fill(user.name)
+
+  const emailInput = page.getByLabel(/email/i)
+  await emailInput.fill(user.email)
+  const submitButton = page.getByRole('button', {
+    name: /give consent/i,
+  })
+  await submitButton.click()
+
+  await expect(page.getByText(/oops! email already exists/i)).toBeVisible()
+  await expect(
+    page.getByText(/thank you for your consent! We will not share your personal information with third parties\./i),
+  ).not.toBeVisible()
+
+  await page.goto('/consents')
+  const lastPageButton = page.getByTestId('last-page')
+  await lastPageButton.click()
+
+  await expect(page.getByText(user.name)).not.toBeVisible()
 })
 
 test('pagination flow: should see collected consents displayed two by two per page by default', async ({ page }) => {
