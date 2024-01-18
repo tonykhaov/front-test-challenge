@@ -5,7 +5,9 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
   plugins: [!process.env.VITEST && remix(), tsconfigPaths()],
-
+  server: {
+    port: 9999,
+  },
   test: {
     globals: true,
     setupFiles: './test/setup.ts',
