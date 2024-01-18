@@ -62,7 +62,13 @@ export function Pagination({ currentPage, lastPage }: { currentPage: number; las
     <TableRow>
       <TableCell>
         {currentPage !== 1 ? (
-          <Link to={toNewParams(currentPage - 1)} aria-label="Go to previous page">
+          <Link
+            to={toNewParams(currentPage - 1)}
+            aria-label="Go to previous page"
+            className={css({
+              whiteSpace: 'nowrap',
+            })}
+          >
             Previous page
           </Link>
         ) : null}
@@ -92,7 +98,13 @@ export function Pagination({ currentPage, lastPage }: { currentPage: number; las
       </TableCell>
       <TableCell>
         {currentPage !== lastPage ? (
-          <Link to={toNewParams(currentPage + 1)} aria-label="Go to next page">
+          <Link
+            to={toNewParams(currentPage + 1)}
+            aria-label="Go to next page"
+            className={css({
+              whiteSpace: 'nowrap',
+            })}
+          >
             Next page
           </Link>
         ) : null}
