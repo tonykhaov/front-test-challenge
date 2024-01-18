@@ -62,7 +62,7 @@ export default function App() {
   return (
     <Document>
       <Flex minH="screen">
-        <NavLink />
+        <Nav />
         <styled.div flex="1">
           <Outlet />
         </styled.div>
@@ -71,7 +71,7 @@ export default function App() {
   )
 }
 
-function NavLink() {
+function Nav() {
   const { pathname } = useLocation()
   return (
     <styled.nav w="max-content" bg="gray.100">
