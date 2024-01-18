@@ -77,3 +77,43 @@ test('pagination flow: should see collected consents displayed two by two per pa
   await expect(thirdUserInMockDb).toBeHidden()
   await expect(fourthUserInMockDb).toBeHidden()
 })
+
+test('pagination flow: should be able to change the number of consents displayed per page', async ({ page }) => {
+  await page.goto('/consents')
+
+  const perPage = 4
+  const perPageSelect = page.getByRole('combobox')
+
+  await perPageSelect.click()
+
+  const perPageOption = page.getByRole('option', {
+    name: perPage.toString(),
+  })
+  await perPageOption.click()
+
+  expect(page).toHaveURL(`/consents?perPage=${perPage}`)
+
+  const firstUserInMockDb = page.getByText(mockCollectedConsents[0].name)
+  const secondUserInMockDb = page.getByText(mockCollectedConsents[1].name)
+  const thirdUserInMockDb = page.getByText(mockCollectedConsents[2].name)
+  const fourthUserInMockDb = page.getByText(mockCollectedConsents[3].name)
+  const fifthUserInMockDb = page.getByText(mockCollectedConsents[4].name)
+
+  await expect(firstUserInMockDb).toBeVisible()
+  await expect(secondUserInMockDb).toBeVisible()
+  await expect(thirdUserInMockDb).toBeVisible()
+  await expect(fourthUserInMockDb).toBeVisible()
+  await expect(fifthUserInMockDb).toBeHidden()
+
+  const nextPageButton = page.getByLabel(/go to next page/i)
+  await nextPageButton.click()
+  // perPage should be kept in the url
+  await expect(page).toHaveURL(new RegExp(`perPage=${perPage}`, 'i'))
+  await expect(page).toHaveURL(/page=2/i)
+  await expect(fifthUserInMockDb).toBeVisible()
+
+  await expect(firstUserInMockDb).toBeHidden()
+  await expect(secondUserInMockDb).toBeHidden()
+  await expect(thirdUserInMockDb).toBeHidden()
+  await expect(fourthUserInMockDb).toBeHidden()
+})
