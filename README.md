@@ -1,5 +1,6 @@
 ## Technical stack
 
+- [Node LTS Version](https://nodejs.org/en)
 - [pnpm](https://pnpm.io/): Package Manager
 - [React](https://react.dev/): Javascript Framework
 - [Remix](https://remix.run/): React Framework
