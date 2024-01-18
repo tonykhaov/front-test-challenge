@@ -38,7 +38,7 @@ export function UserConsentRow({ consent }: { consent: CollectedConsentWithConse
   const enabledConsents = consent.consents.filter((consent) => consent.enabled)
 
   return (
-    <TableRow key={consent.id}>
+    <TableRow>
       <TableCell>{consent.name}</TableCell>
       <TableCell>{consent.email}</TableCell>
       {enabledConsents.length > 0 ? (

@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker'
 import { test, expect } from '@playwright/test'
+import { mockCollectedConsents } from '~/app/mock/data'
 
 test('collect a new consent flow: give consent and see it in the collected consents', async ({ page }) => {
   const user = {
@@ -47,4 +48,32 @@ test('collect a new consent flow: give consent and see it in the collected conse
   await expect(nameCell).toBeVisible()
   const emailCell = page.getByText(user.email)
   await expect(emailCell).toBeVisible()
+})
+
+test('pagination flow: should see collected consents displayed two by two per page by default', async ({ page }) => {
+  await page.goto('/consents')
+
+  const firstUserInMockDb = page.getByText(mockCollectedConsents[0].name)
+  await expect(firstUserInMockDb).toBeVisible()
+  const secondUserInMockDb = page.getByText(mockCollectedConsents[1].name)
+  await expect(secondUserInMockDb).toBeVisible()
+  const thirdUserInMockDb = page.getByText(mockCollectedConsents[2].name)
+  await expect(thirdUserInMockDb).toBeHidden()
+
+  const nextPageButton = page.getByLabel(/go to next page/i)
+  await nextPageButton.click()
+  await expect(page).toHaveURL('/consents?page=2')
+  await expect(firstUserInMockDb).toBeHidden()
+  await expect(secondUserInMockDb).toBeHidden()
+  await expect(thirdUserInMockDb).toBeVisible()
+  const fourthUserInMockDb = page.getByText(mockCollectedConsents[3].name)
+  await expect(fourthUserInMockDb).toBeVisible()
+
+  const previousPageButton = page.getByLabel(/go to previous page/i)
+  await previousPageButton.click()
+  await expect(page).toHaveURL('/consents?page=1')
+  await expect(firstUserInMockDb).toBeVisible()
+  await expect(secondUserInMockDb).toBeVisible()
+  await expect(thirdUserInMockDb).toBeHidden()
+  await expect(fourthUserInMockDb).toBeHidden()
 })
