@@ -5,7 +5,7 @@
 - [Remix](https://remix.run/): React Framework
 - [Typescript](https://www.typescriptlang.org/) Typed Javascript Language
 - [PandaCSS](https://panda-css.com/): Type-safe CSS
-- [Material UI](https://mui.com/material-ui/): UI Library
+- [Material UI](https://mui.com/material-ui/): UI Components
 - [Vite](https://vitejs.dev/): Bundler
 - [Vitest](https://vitest.dev/): Test runner
 - [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/): Wrapper to test react
