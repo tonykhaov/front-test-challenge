@@ -82,6 +82,7 @@ export function Pagination({ currentPage, lastPage }: { currentPage: number; las
                   color: currentPage === page ? 'black' : 'inherit',
                   textDecoration: currentPage === page ? 'underline' : 'none',
                 })}
+                data-testid={page === lastPage ? 'last-page' : undefined}
               >
                 {page}
               </Link>

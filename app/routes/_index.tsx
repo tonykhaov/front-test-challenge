@@ -52,13 +52,29 @@ export default function Index() {
 
       <Form method="post">
         <div>
-          <Input placeholder="Name" name="name" required />
+          <Input
+            placeholder="Name"
+            name="name"
+            required
+            inputProps={{
+              'aria-label': 'Name',
+            }}
+          />
         </div>
 
         <Spacer h="4" />
 
         <div>
-          <Input inputRef={emailRef} type="email" placeholder="Email address" name="email" required />
+          <Input
+            inputRef={emailRef}
+            type="email"
+            placeholder="Email address"
+            name="email"
+            required
+            inputProps={{
+              'aria-label': 'Email',
+            }}
+          />
         </div>
 
         <Spacer h="6" />
