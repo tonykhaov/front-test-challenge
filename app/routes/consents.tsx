@@ -1,13 +1,12 @@
 import { Spacer } from 'styled-system/jsx'
-import { addConsentDetails, database, getPaginatedConsents } from '../database.server'
-import { useLoaderData, useSearchParams } from '@remix-run/react'
+import { addConsentDetails, database, getPaginatedConsents } from '../database'
+import { ClientLoaderFunctionArgs, useLoaderData, useSearchParams, redirect } from '@remix-run/react'
 import { Container, Typography } from '@mui/material'
-import { LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { SelectPerPage } from '../components/select-per-page'
 import { TableConsentsData } from '../components/table-consents-data'
 
 export default function ConsentsPage() {
-  const data = useLoaderData<typeof loader>()
+  const data = useLoaderData<typeof clientLoader>()
 
   const [searchParams, setSearchParams] = useSearchParams()
   const currentPage = Number(searchParams.get('page') || '1')
@@ -36,7 +35,7 @@ export default function ConsentsPage() {
 
 const PER_PAGE = 2
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const clientLoader = async ({ request }: ClientLoaderFunctionArgs) => {
   const url = new URL(request.url)
 
   const page = Number(url.searchParams.get('page') || 1)

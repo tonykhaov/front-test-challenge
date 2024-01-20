@@ -1,15 +1,14 @@
 import * as React from 'react'
 import { Alert, Button, Checkbox, FormLabel, Input, Link, Typography } from '@mui/material'
-import { ActionFunctionArgs, json } from '@remix-run/node'
-import { Form, useActionData, useLoaderData } from '@remix-run/react'
+import { ClientActionFunctionArgs, Form, json, useActionData, useLoaderData } from '@remix-run/react'
 import { Flex, Spacer, styled } from 'styled-system/jsx'
-import { database } from '../database.server'
+import { database } from '../database'
 import { CollectedConsent } from '../types'
 
 export default function Index() {
-  const data = useLoaderData<typeof loader>()
+  const data = useLoaderData<typeof clientLoader>()
 
-  const actionData = useActionData<typeof action>()
+  const actionData = useActionData<typeof clientAction>()
   const emailRef = React.useRef<HTMLInputElement>(null)
 
   React.useEffect(() => {
@@ -104,7 +103,7 @@ export default function Index() {
   )
 }
 
-export const action = async ({ request }: ActionFunctionArgs) => {
+export const clientAction = async ({ request }: ClientActionFunctionArgs) => {
   const body = await request.formData()
 
   const name = body.get('name')
@@ -139,6 +138,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return json({ ok: true })
 }
 
-export const loader = async () => {
+export const clientLoader = () => {
   return { consentsList: database.consentsList }
 }

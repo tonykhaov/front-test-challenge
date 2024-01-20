@@ -4,7 +4,13 @@ import { defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
-  plugins: [!process.env.VITEST && remix(), tsconfigPaths()],
+  plugins: [
+    !process.env.VITEST &&
+      remix({
+        unstable_ssr: true,
+      }),
+    tsconfigPaths(),
+  ],
   server: {
     port: 9999,
   },
